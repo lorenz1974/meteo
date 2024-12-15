@@ -116,11 +116,11 @@ const MapContainer: React.FC = () => {
       {!currentPosition && (
         <Alert
           variant='info'
-          className='position-absolute top-5 start-50 translate-middle-x text-center fw-bold w-50'
+          className='position-absolute bottom-0 start-50 translate-middle-x text-center w-100'
           style={{ zIndex: 1000 }}
         >
           Scorri la mappa <FaRegHandPointUp /> e poi clicca su un punto{' '}
-          <FiTarget /> <br /> per ottenere le informazioni meteo{' '}
+          <FiTarget /> per ottenere le informazioni meteo{' '}
           <IoInformationCircleOutline />.
         </Alert>
       )}
