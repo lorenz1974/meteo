@@ -54,8 +54,30 @@ const MapContainer: React.FC = () => {
 
           // Ricentra la mappa sulla posizione cliccata
           // Fastidioso in modile, lo disattivo
-          // if (mapRef.current) {
-          //   mapRef.current.setView([lat, lng], mapRef.current.getZoom())
+          if (window.innerWidth > 768 && mapRef.current) {
+            const offset = mapRef.current.latLngToContainerPoint([lat, lng])
+            const convertedLatLng =
+              mapRef.current.containerPointToLatLng(offset)
+
+            console.log('innerWidth', window.innerWidth)
+            console.log('offset', offset)
+            console.log('convertedLatLng', convertedLatLng)
+
+            // Si sposta al centro dell'area libera aggiungendo 300px dalla coordinata x
+            // che sono la larghezza della modale del real time
+            offset.y = offset.x + 300
+            console.log('offset', offset)
+
+            const newLatLng = mapRef.current.containerPointToLatLng(offset)
+            console.log('newLatLng', newLatLng)
+            //mapRef.current.panTo(newLatLng)
+          }
+          // else if (mapRef.current) {
+          //   console.log('innerWidth', window.innerWidth)
+          //   const offset = mapRef.current.latLngToContainerPoint([lat, lng])
+          //   offset.y = 0
+          //   const newLatLng = mapRef.current.containerPointToLatLng(offset)
+          //   mapRef.current.setView(newLatLng, mapRef.current.getZoom())
           // }
 
           if (markerRef.current) {
@@ -83,7 +105,6 @@ const MapContainer: React.FC = () => {
           const { latitude, longitude } = position.coords
           const userLocation = { lat: latitude, lon: longitude }
           setInitialPosition(userLocation)
-          //setCurrentPosition(userLocation)
 
           if (mapRef.current) {
             mapRef.current.setView([latitude, longitude], 13)
@@ -98,7 +119,22 @@ const MapContainer: React.FC = () => {
           }
         },
         () => {
-          console.error('Impossibile ottenere la posizione dell’utente.')
+          // Se non ottiene la posizione dell'utente, centra la mappa su Roma
+          console.error("Impossibile ottenere la posizione dell'utente.")
+          const romeLocation = { lat: 41.9028, lon: 12.4964 }
+          setInitialPosition(romeLocation)
+
+          if (mapRef.current) {
+            mapRef.current.setView([romeLocation.lat, romeLocation.lon], 8)
+
+            markerRef.current = L.marker([romeLocation.lat, romeLocation.lon], {
+              icon: L.icon({
+                iconUrl: iconUrl,
+                iconSize: [32, 32],
+                iconAnchor: [16, 32],
+              }),
+            }).addTo(mapRef.current)
+          }
         }
       )
     }
