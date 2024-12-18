@@ -3,27 +3,27 @@
   "name": "Tech-Mentor.it Meteo",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "/meteo/favicon/cloudy.png",
       "sizes": "64x64 24x24",
       "type": "image/x-icon"
     },
     {
-      "src": "favicon-16x16.png",
+      "src": "/meteo/favicon/cloudy.png",
       "sizes": "16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "favicon-32x32.png",
+      "src": "/meteo/favicon/cloudy.png",
       "sizes": "32x32",
       "type": "image/x-icon"
     },
     {
-      "src": "android-chrome-192x192.png",
+      "src": "/meteo/favicon/cloudy.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "android-chrome-512x512.png",
+      "src": "/meteo/favicon/cloudy.png",
       "type": "image/png",
       "sizes": "512x512"
     }

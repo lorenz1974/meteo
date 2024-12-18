@@ -110,6 +110,15 @@ body {
 
 .slick-prev,
 .slick-next {
+  // Comunuq li nasconso avendo spostato i controlli sulla timeline
+  display: none !important;
   position: absolute;
   top: 1.5rem;
+}
+
+#weatherPopup {
+  width: 100%;
+  @media screen and (min-width: 578px) {
+    width: 300px;
+  }
 }

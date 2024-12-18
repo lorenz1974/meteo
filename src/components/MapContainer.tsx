@@ -55,29 +55,24 @@ const MapContainer: React.FC = () => {
           // Ricentra la mappa sulla posizione cliccata
           // Fastidioso in modile, lo disattivo
           if (window.innerWidth > 768 && mapRef.current) {
-            const offset = mapRef.current.latLngToContainerPoint([lat, lng])
-            const convertedLatLng =
-              mapRef.current.containerPointToLatLng(offset)
-
-            console.log('innerWidth', window.innerWidth)
-            console.log('offset', offset)
-            console.log('convertedLatLng', convertedLatLng)
-
-            // Si sposta al centro dell'area libera aggiungendo 300px dalla coordinata x
-            // che sono la larghezza della modale del real time
-            offset.y = offset.x + 300
-            console.log('offset', offset)
-
-            const newLatLng = mapRef.current.containerPointToLatLng(offset)
-            console.log('newLatLng', newLatLng)
-            //mapRef.current.panTo(newLatLng)
+            mapRef.current.setView([lat, lng], 13)
           }
           // else if (mapRef.current) {
-          //   console.log('innerWidth', window.innerWidth)
-          //   const offset = mapRef.current.latLngToContainerPoint([lat, lng])
-          //   offset.y = 0
-          //   const newLatLng = mapRef.current.containerPointToLatLng(offset)
-          //   mapRef.current.setView(newLatLng, mapRef.current.getZoom())
+          // const offset = mapRef.current.latLngToContainerPoint([lat, lng])
+          // const convertedLatLng = mapRef.current.containerPointToLatLng(offset)
+
+          // console.log('innerWidth', window.innerWidth)
+          // console.log('offset', offset)
+          // console.log('convertedLatLng', convertedLatLng)
+
+          // // Si sposta al centro dell'area libera aggiungendo 300px dalla coordinata x
+          // // che sono la larghezza della modale del real time
+          // offset.y = offset.x + 300
+          // console.log('offset', offset)
+
+          // const newLatLng = mapRef.current.containerPointToLatLng(offset)
+          // console.log('newLatLng', newLatLng)
+          //mapRef.current.panTo(newLatLng)
           // }
 
           if (markerRef.current) {
@@ -138,7 +133,7 @@ const MapContainer: React.FC = () => {
         }
       )
     }
-  }, [currentPosition])
+  }, [initialPosition, currentPosition])
 
   return (
     <div style={{ height: '100vh', width: '100%' }}>

@@ -22,7 +22,7 @@ import {
 } from 'react-icons/fa'
 
 import { FcCalendar } from 'react-icons/fc'
-import { LuCalendarArrowUp, LuClockArrowDown } from 'react-icons/lu'
+import { LuCalendarArrowDown, LuClockArrowUp } from 'react-icons/lu'
 
 import { IoIosBody } from 'react-icons/io'
 import { TbCloudSearch, TbRulerMeasure2 } from 'react-icons/tb'
@@ -108,7 +108,13 @@ const ForecastPopup: React.FC<IForecastPopupProps> = ({
   }
 
   return (
-    <Modal show={true} onHide={onClose} animation={false}>
+    <Modal
+      show={true}
+      onHide={onClose}
+      animation={false}
+      className=''
+      style={{ zIndex: 1300 }}
+    >
       <Modal.Header className='bg-yellow' closeButton>
         {forecastData && forecastData.city.name && (
           <Modal.Title>
@@ -225,7 +231,14 @@ const ForecastPopup: React.FC<IForecastPopupProps> = ({
           <InputGroup className='input-group d-flex flex-column justify-content-center align-items-center pt-4 mb-2 border border-1'>
             <Row className='w-100'>
               <Col className='d-flex justify-content-beetween align-items-center col-auto'>
-                <LuCalendarArrowUp className='fs-3' />
+                <LuCalendarArrowDown
+                  className='fs-3'
+                  onClick={() => {
+                    if (slideIndex > 0) {
+                      sliderRef.current?.slickGoTo(slideIndex - 1)
+                    }
+                  }}
+                />
               </Col>
               <Col className='d-flex flex-column justify-content-center align-items-center flex-grow-1  mx-0 px-0'>
                 <input
@@ -240,7 +253,14 @@ const ForecastPopup: React.FC<IForecastPopupProps> = ({
                 />
               </Col>
               <Col className='d-flex justify-content-center align-items-center col-auto'>
-                <LuClockArrowDown className='fs-3' />
+                <LuClockArrowUp
+                  className='fs-3'
+                  onClick={() => {
+                    if (slideIndex < forecastData.list.length - 1) {
+                      sliderRef.current?.slickGoTo(slideIndex + 1)
+                    }
+                  }}
+                />
               </Col>
             </Row>
             <Row className='d-flex justify-content-center align-items-center'>

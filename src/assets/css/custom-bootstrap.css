@@ -13467,6 +13467,16 @@ body {
 
 .slick-prev,
 .slick-next {
+  display: none !important;
   position: absolute;
   top: 1.5rem;
+}
+
+#weatherPopup {
+  width: 100%;
+}
+@media screen and (min-width: 578px) {
+  #weatherPopup {
+    width: 300px;
+  }
 }/*# sourceMappingURL=custom-bootstrap.css.map */

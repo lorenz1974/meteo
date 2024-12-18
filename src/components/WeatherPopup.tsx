@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Card, ListGroup, Button, Spinner, Alert } from 'react-bootstrap'
+import { Card, Button, Spinner, Alert, Row, Col } from 'react-bootstrap'
 import axios from 'axios'
 import { apiKey } from '../config'
 import {
@@ -104,109 +104,165 @@ const WeatherPopup: React.FC<IWeatherPopupProps> = ({
   const { main, weather, wind, name } = weatherData
 
   return (
-    <Card className='sticky-bottom' style={{ zIndex: 900, width: 300 }}>
-      <Card.Header className='position-relative d-flex justify-content-between align-items-center pe-1 fw-bold'>
-        Situazione Attuale
-        <div>
-          <Button
-            variant='light'
-            size='sm'
-            className='m-0 p-1'
-            onClick={onRecenter}
-            title='Ricentra la mappa'
-          >
-            <FaArrowsAlt />
-          </Button>
-          <Button
-            variant='light'
-            size='sm'
-            className='m-0 p-1'
-            onClick={onClose}
-            title='Chiudi il popup'
-          >
-            <FaTimes />
-          </Button>
-        </div>
-      </Card.Header>
-      <ListGroup variant='flush'>
-        <ListGroup.Item className='d-flex align-items-center ps-0'>
-          <FaCity className='text-black w-15' />
-          <div>
-            <span className='fw-bold'>Luogo:</span>&nbsp;
-            {name}
+    <>
+      <Card
+        id='weatherPopup'
+        className='sticky-bottom'
+        style={{
+          zIndex: 1200,
+        }}
+      >
+        <Card.Header className='position-relative d-flex justify-content-between align-items-start pe-1 fw-bold'>
+          Situazione Attuale
+          <div className='d-flex text-nowrap'>
+            <Button
+              variant='light'
+              size='sm'
+              className='m-0 p-1'
+              onClick={onRecenter}
+              title='Ricentra la mappa'
+            >
+              <FaArrowsAlt />
+            </Button>
+            <Button
+              variant='light'
+              size='sm'
+              className='m-0 p-1'
+              onClick={onClose}
+              title='Chiudi il popup'
+            >
+              <FaTimes />
+            </Button>
           </div>
-        </ListGroup.Item>
-
-        <ListGroup.Item className='d-flex align-items-center ps-0'>
-          <FaMapMarkerAlt className='text-primary w-15' />
-          <div>
-            <span className='fw-bold'>Lat / Long:</span>&nbsp;
-            {coord.lat.toFixed(3)} / {coord.lon.toFixed(3)}
-          </div>
-        </ListGroup.Item>
-
-        <ListGroup.Item className='d-flex align-items-center ps-0'>
-          <FaThermometerHalf className='text-success w-15' />
-          <span className='fw-bold'>Temperatura:</span>&nbsp;{main.temp}°C
-        </ListGroup.Item>
-
-        <ListGroup.Item className='d-flex align-items-center ps-0'>
-          <IoIosBody className='text-black w-15' />
-          <span className='fw-bold'>Percepita:</span>&nbsp;{main.feels_like}°C
-        </ListGroup.Item>
-
-        <ListGroup.Item className='d-flex align-items-center ps-0'>
-          <FaThermometerHalf className='text-primary w-15' />
-          <span className='fw-bold'>Min:</span>&nbsp;{main.temp_min.toString()}
-          °C
-          <FaThermometerHalf className='text-danger w-15' />
-          <span className='fw-bold'>Max:</span>&nbsp;{main.temp_max}°C
-        </ListGroup.Item>
-
-        <ListGroup.Item className='d-flex align-items-center ps-0'>
-          <FaCloudSun className='text-warning w-15 text-nowrap' />
-          <span className='fw-bold'>Condizioni:</span>&nbsp;
-          <p className='text-nowrap m-0 p-0'>{weather[0].description}</p>
-        </ListGroup.Item>
-
-        <ListGroup.Item className='d-flex align-items-center ps-0'>
-          <FaHandHoldingWater className='text-primary w-15 text-nowrap' />
-          <span className='fw-bold'>Umidità:</span>&nbsp;
-          <p className='text-nowrap m-0 p-0'>{main.humidity}%</p>
-        </ListGroup.Item>
-
-        <ListGroup.Item className='d-flex align-items-center ps-0'>
-          <FaWind className='text-info w-15' />
-          <span className='fw-bold'>Vento:</span>&nbsp;{wind.speed} m/s
-        </ListGroup.Item>
-
-        <ListGroup.Item className='d-flex align-items-center ps-0'>
-          <FiSunrise className='text-red w-15' />
-          <span className='fw-bold'>Alba:</span>&nbsp;
-          {formatTime(weatherData.sys.sunrise)}
-          <FiSunset className='text-blck w-15' />
-          <span className='fw-bold'>Tramonto:</span>&nbsp;
-          {formatTime(weatherData.sys.sunset)}
-        </ListGroup.Item>
-      </ListGroup>
-
-      <Card.Footer className='bg-gray-300'>
-        <Button
-          variant='warning'
-          onClick={() => setShowForecast(true)}
-          title='Visualizza previsioni'
-        >
-          Previsioni
-        </Button>
-      </Card.Footer>
-      {showForecast && (
-        <ForecastPopup
-          lon={coord.lon}
-          lat={coord.lat}
-          onClose={() => setShowForecast(false)}
-        />
-      )}
-    </Card>
+        </Card.Header>
+        <Card.Body>
+          <Row>
+            <Col className='m-0 p-0'>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+                <FaCity className='text-black p-0 m-0 pe-1' />
+                <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
+                  Luogo:&nbsp;
+                </span>
+                <span className='ps-1 pe-0'>{name}</span>
+              </p>
+            </Col>
+            <Col className='m-0 p-0'>
+              {' '}
+              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+                <FaMapMarkerAlt className='text-primary' />
+                <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
+                  Lat / Long:&nbsp;
+                </span>
+                <span className='ps-1 pe-0'>{coord.lat.toFixed(3)}</span> /{' '}
+                {coord.lon.toFixed(3)}
+              </p>
+            </Col>
+            <Col className='m-0 p-0'>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+                <FaThermometerHalf className='text-success' />
+                <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
+                  Temperatura:&nbsp;
+                </span>
+                <span className='ps-1 pe-0'>{main.temp}°C</span>{' '}
+              </p>
+            </Col>
+            <Col className='m-0 p-0'>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+                {' '}
+                <IoIosBody className='text-black' />
+                <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
+                  Percepita:&nbsp;
+                </span>
+                <span className='ps-1 pe-0'>{main.feels_like}°C</span>{' '}
+              </p>
+            </Col>
+            <Col className='m-0 p-0'>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+                {' '}
+                <FaThermometerHalf className='text-primary' />
+                <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
+                  Min:&nbsp;
+                </span>
+                <span className='ps-1 pe-0'>{main.temp_min}°C</span>
+                <FaThermometerHalf className='text-danger' />
+                <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
+                  Max:&nbsp;
+                </span>
+                <span className='ps-1 pe-0'>{main.temp_max}°C</span>{' '}
+              </p>
+            </Col>
+            <Col className='m-0 p-0'>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+                {' '}
+                <FaCloudSun className='text-warning' />
+                <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
+                  Condizioni:&nbsp;
+                </span>
+                <span className='ps-1 pe-0'>{weather[0].description}</span>{' '}
+              </p>
+            </Col>
+            <Col className='m-0 p-0'>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+                {' '}
+                <FaHandHoldingWater className='text-primary' />
+                <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
+                  Umidità:&nbsp;
+                </span>
+                <span className='ps-1 pe-0'>{main.humidity}%</span>{' '}
+              </p>
+            </Col>
+            <Col className='m-0 p-0'>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+                {' '}
+                <FaWind className='text-info' />
+                <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
+                  Vento:&nbsp;
+                </span>
+                <span className='ps-1 pe-0'>{wind.speed} m/s</span>{' '}
+              </p>
+            </Col>
+            <Col className='m-0 p-0'>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+                {' '}
+                <FiSunrise className='text-red' />
+                <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
+                  Alba:&nbsp;
+                </span>
+                <span className='ps-1 pe-1'>
+                  {' '}
+                  {formatTime(weatherData.sys.sunrise)}
+                </span>{' '}
+                <FiSunset className='text-black' />
+                <span className='d-none d-sm-inline ps-1 pe-1 fw-bold'>
+                  {' '}
+                  Tramonto:&nbsp;
+                </span>
+                <span className='ps-1 pe-0'>
+                  {' '}
+                  {formatTime(weatherData.sys.sunset)}
+                </span>{' '}
+              </p>
+            </Col>
+          </Row>
+        </Card.Body>
+        <Card.Footer className='bg-gray-300'>
+          <Button
+            variant='warning'
+            onClick={() => setShowForecast(true)}
+            title='Visualizza previsioni'
+          >
+            Previsioni
+          </Button>
+        </Card.Footer>
+        {showForecast && (
+          <ForecastPopup
+            lon={coord.lon}
+            lat={coord.lat}
+            onClose={() => setShowForecast(false)}
+          />
+        )}
+      </Card>
+    </>
   )
 }
 
