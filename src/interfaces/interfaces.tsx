@@ -113,3 +113,11 @@ export enum IMainEnum {
   Clouds = 'Clouds',
   Rain = 'Rain',
 }
+
+export interface ILocation {
+  id: number
+  name: string
+  state: string
+  country: string
+  coord: ICoord
+}

@@ -135,21 +135,21 @@ const WeatherPopup: React.FC<IWeatherPopupProps> = ({
             </Button>
           </div>
         </Card.Header>
-        <Card.Body>
+        <Card.Body className='pt-0'>
           <Row>
-            <Col className='m-0 p-0'>
-              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
-                <FaCity className='text-black p-0 m-0 pe-1' />
+            <Col className='m-0 p-0 border border-0 border-bottom d-flex align-items-center justify-content-center justify-content-sm-start '>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap p-2 m-0'>
+                <FaCity className='text-black ps-1 pe-0 m-0' />
                 <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
                   Luogo:&nbsp;
                 </span>
                 <span className='ps-1 pe-0'>{name}</span>
               </p>
             </Col>
-            <Col className='m-0 p-0'>
+            <Col className='m-0 p-0 border border-0 border-bottom d-flex align-items-center justify-content-center justify-content-sm-start '>
               {' '}
-              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
-                <FaMapMarkerAlt className='text-primary' />
+              <p className='d-flex flex-nowrap align-items-center text-nowrap p-2 m-0'>
+                <FaMapMarkerAlt className='text-primary ps-1 pe-0 m-0' />
                 <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
                   Lat / Long:&nbsp;
                 </span>
@@ -157,74 +157,74 @@ const WeatherPopup: React.FC<IWeatherPopupProps> = ({
                 {coord.lon.toFixed(3)}
               </p>
             </Col>
-            <Col className='m-0 p-0'>
-              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
-                <FaThermometerHalf className='text-success' />
+            <Col className='m-0 p-0 border border-0 border-bottom d-flex align-items-center justify-content-center justify-content-sm-start '>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap p-2 m-0'>
+                <FaThermometerHalf className='text-success ps-1 pe-0 m-0' />
                 <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
                   Temperatura:&nbsp;
                 </span>
                 <span className='ps-1 pe-0'>{main.temp}°C</span>{' '}
               </p>
             </Col>
-            <Col className='m-0 p-0'>
-              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+            <Col className='m-0 p-0 border border-0 border-bottom d-flex align-items-center justify-content-center justify-content-sm-start '>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap p-2 m-0'>
                 {' '}
-                <IoIosBody className='text-black' />
+                <IoIosBody className='text-black ps-1 pe-0 m-0' />
                 <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
                   Percepita:&nbsp;
                 </span>
                 <span className='ps-1 pe-0'>{main.feels_like}°C</span>{' '}
               </p>
             </Col>
-            <Col className='m-0 p-0'>
-              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+            <Col className='m-0 p-0 border border-0 border-bottom d-flex align-items-center justify-content-center justify-content-sm-start '>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap p-2 m-0'>
                 {' '}
-                <FaThermometerHalf className='text-primary' />
+                <FaThermometerHalf className='text-primary ps-1 pe-0 m-0' />
                 <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
                   Min:&nbsp;
                 </span>
                 <span className='ps-1 pe-0'>{main.temp_min}°C</span>
-                <FaThermometerHalf className='text-danger' />
+                <FaThermometerHalf className='text-danger ps-1 pe-0 m-0' />
                 <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
                   Max:&nbsp;
                 </span>
                 <span className='ps-1 pe-0'>{main.temp_max}°C</span>{' '}
               </p>
             </Col>
-            <Col className='m-0 p-0'>
-              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+            <Col className='m-0 p-0 border border-0 border-bottom d-flex align-items-center justify-content-center justify-content-sm-start '>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap p-2 m-0'>
                 {' '}
-                <FaCloudSun className='text-warning' />
+                <FaCloudSun className='text-warning ps-1 pe-0 m-0' />
                 <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
                   Condizioni:&nbsp;
                 </span>
                 <span className='ps-1 pe-0'>{weather[0].description}</span>{' '}
               </p>
             </Col>
-            <Col className='m-0 p-0'>
-              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+            <Col className='m-0 p-0 border border-0 border-bottom d-flex align-items-center justify-content-center justify-content-sm-start '>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap p-2 m-0'>
                 {' '}
-                <FaHandHoldingWater className='text-primary' />
+                <FaHandHoldingWater className='text-primary ps-1 pe-0 m-0' />
                 <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
                   Umidità:&nbsp;
                 </span>
                 <span className='ps-1 pe-0'>{main.humidity}%</span>{' '}
               </p>
             </Col>
-            <Col className='m-0 p-0'>
-              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+            <Col className='m-0 p-0 border border-0 border-bottom d-flex align-items-center justify-content-center justify-content-sm-start '>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap p-2 m-0'>
                 {' '}
-                <FaWind className='text-info' />
+                <FaWind className='text-info ps-1 pe-0 m-0' />
                 <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
                   Vento:&nbsp;
                 </span>
                 <span className='ps-1 pe-0'>{wind.speed} m/s</span>{' '}
               </p>
             </Col>
-            <Col className='m-0 p-0'>
-              <p className='d-flex flex-nowrap align-items-center text-nowrap border border-0 border-bottom p-1'>
+            <Col className='m-0 p-0 border border-0 border-bottom d-flex align-items-center justify-content-center justify-content-sm-start '>
+              <p className='d-flex flex-nowrap align-items-center text-nowrap p-2 m-0'>
                 {' '}
-                <FiSunrise className='text-red' />
+                <FiSunrise className='text-red ps-1 pe-0 m-0' />
                 <span className='d-none d-sm-inline ps-1 pe-0 fw-bold'>
                   Alba:&nbsp;
                 </span>
@@ -232,7 +232,7 @@ const WeatherPopup: React.FC<IWeatherPopupProps> = ({
                   {' '}
                   {formatTime(weatherData.sys.sunrise)}
                 </span>{' '}
-                <FiSunset className='text-black' />
+                <FiSunset className='text-black ps-1 pe-0 m-0' />
                 <span className='d-none d-sm-inline ps-1 pe-1 fw-bold'>
                   {' '}
                   Tramonto:&nbsp;
