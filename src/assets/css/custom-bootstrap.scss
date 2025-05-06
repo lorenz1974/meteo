@@ -91,7 +91,7 @@ $custom-position-values: (
 $position-values: map-merge($position-values, $custom-position-values);
 
 // Import del Google font Inter
-@import url('http://fonts.googleapis.com/css?family=Inter:400,300,700');
+@import url('https://fonts.googleapis.com/css?family=Inter:400,300,700');
 
 @import '../scss/bootstrap.scss';
 

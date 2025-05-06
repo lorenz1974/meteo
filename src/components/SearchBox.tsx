@@ -1,88 +1,158 @@
-import React, { useState, useMemo, FormEvent } from 'react'
+import React, { useState, useEffect, FormEvent } from 'react'
 import { useDebounce } from 'use-debounce'
-import { Row, Col, Form, ListGroup, InputGroup } from 'react-bootstrap'
+import {
+  Row,
+  Col,
+  Form,
+  ListGroup,
+  InputGroup,
+  Card,
+  Alert,
+  Spinner,
+} from 'react-bootstrap'
 import { ILocation, ICoord } from '../interfaces/interfaces'
 import { FaSearchLocation } from 'react-icons/fa'
-import { MdCancel } from 'react-icons/md'
+import axios from 'axios'
 
-import cityList from '../data/city.list.json'
+import { API_KEY, ALERT_TIMEOUT } from '../config'
+
+import { MdCancel } from 'react-icons/md'
 
 interface ISearchBoxProps {
   setCurrentPosition: (coord: ICoord) => void // Funzione che riceve una città selezionata
+  setZoom: (zoom: number) => void
 }
 
-const SearchBox: React.FC<ISearchBoxProps> = ({ setCurrentPosition }) => {
+const SearchBox: React.FC<ISearchBoxProps> = ({
+  setCurrentPosition,
+  setZoom,
+}) => {
   const [search, setSearch] = useState<string>('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isError, setIsError] = useState<string | null>(null)
+  const [fetchedCitiesNames, setFetchedCitiesNames] = useState<ILocation[]>([])
   const [debouncedQuery] = useDebounce(search, 500) // Usa il debounce con 500ms di ritardo
-
-  // Ordina cityList in base a country e poi a name
-  const sortedCityList = useMemo(() => {
-    return cityList.sort((a, b) => {
-      if (a.country < b.country) return -1
-      if (a.country > b.country) return 1
-      if (a.name < b.name) return -1
-      if (a.name > b.name) return 1
-      return 0
-    })
-  }, [])
 
   const handleChange = (value: string) => {
     setSearch(value)
   }
 
   const hadleClickListItem = (city: ILocation) => {
-    handleChange(`${city.name}, ${city.country}`)
+    // handleChange(
+    //   `${city.local_names?.it ? city.local_names.it : city.name}, ${
+    //     city.state
+    //   }, ${city.country}`
+    // )
+    setZoom(8)
     setCurrentPosition({
-      lon: city.coord.lon,
-      lat: city.coord.lat,
+      lon: city.lon,
+      lat: city.lat,
     })
   }
 
   const handleSearch = (e: FormEvent) => {
     e.preventDefault()
     // Seleziona la prima città filtrata
-    if (filteredCities.length > 0) {
-      const firstCity = filteredCities[0]
-      handleChange(`${firstCity.name},${firstCity.country}`)
+    if (fetchedCitiesNames.length > 0) {
+      const firstCity = fetchedCitiesNames[0]
+      // handleChange(
+      //   `${
+      //     firstCity.local_names?.it ? firstCity.local_names.it : firstCity.name
+      //   }, ${firstCity.state}, ${firstCity.country}`
+      // )
       setCurrentPosition({
-        lon: firstCity.coord.lon,
-        lat: firstCity.coord.lat,
+        lon: firstCity.lon,
+        lat: firstCity.lat,
       })
     }
   }
 
   const handleClickSearchIcon = () => {
-    document.getElementById('searchField')!.style.display = 'block'
-    document.getElementById('searchField')!.focus()
-    document.getElementById('cancelSearch')!.style.display = 'block'
+    const searchFieldElement = document.getElementById('searchField')
+    const cancelSearchElement = document.getElementById('cancelSearch')
+    if (searchFieldElement) {
+      searchFieldElement.classList.toggle('d-none')
+      searchFieldElement.focus()
+    }
+    if (cancelSearchElement) {
+      cancelSearchElement.classList.toggle('d-none')
+    }
   }
 
   const handleCancelSearch = () => {
     search.length > 0 && setSearch('')
     if (search.length === 0) {
-      document.getElementById('cancelSearch')!.style.display = 'none'
-      document.getElementById('searchField')!.style.display = 'none'
+      const cancelSearchElement = document.getElementById('cancelSearch')
+      const searchFieldElement = document.getElementById('searchField')
+      if (cancelSearchElement) {
+        cancelSearchElement.classList.toggle('d-none')
+      }
+      if (searchFieldElement) {
+        searchFieldElement.classList.toggle('d-none')
+      }
     }
   }
 
-  // Filtro ottimizzato delle città
-  const filteredCities: ILocation[] = useMemo(() => {
-    if (debouncedQuery.trim().length < 2) return [] // Filtra solo con almeno 2 caratteri
-    const lowerCaseSearch = debouncedQuery.toLowerCase()
-    const upperCaseSearch = debouncedQuery.toUpperCase()
+  useEffect(() => {
+    const fetchCitiesNames = async () => {
+      if (debouncedQuery.trim().length >= 2) {
+        setIsLoading(true)
+        setIsError(null)
+        try {
+          const response = await axios.get<ILocation[]>(
+            `https://api.openweathermap.org/geo/1.0/direct`,
+            {
+              params: {
+                appid: API_KEY,
+                limit: 5,
+                q: debouncedQuery,
+                units: 'metric', // Per ottenere i dati in gradi Celsius
+                lang: 'it', // Per ottenere la descrizione meteo in italiano
+              },
+            }
+          )
 
-    // Se l'utente non scrive maiuscolo.
-    if (search !== upperCaseSearch) {
-      return sortedCityList.filter((city: ILocation) =>
-        city.name.toLowerCase().includes(lowerCaseSearch)
-      )
-    } else {
-      // Se scrive maiuscolo effettua la ricerca negli stati
-      return sortedCityList.filter((city: ILocation) =>
-        city.country.includes(debouncedQuery)
-      )
+          // Filtra i risultati per città uniche (Si! OpenWeather restituisce duplicati!)
+          const uniqueCities = response.data.filter(
+            (city, index, self) =>
+              index ===
+              self.findIndex(
+                (c) =>
+                  c.name === city.name &&
+                  c.state === city.state &&
+                  c.country === city.country
+              )
+          )
+
+          setFetchedCitiesNames(uniqueCities)
+          //console.log('SearchBox - fetchedCitiesNames', response.data)
+          //console.log('SearchBox - uniqueCities', uniqueCities)
+        } catch (error: any) {
+          setIsError(error.response?.data?.message || 'Errore nella fetch')
+        } finally {
+          setIsLoading(false)
+        }
+      }
     }
+    fetchCitiesNames()
   }, [debouncedQuery])
+
+  if (isError) {
+    setTimeout(() => {
+      setIsError(null)
+    }, ALERT_TIMEOUT)
+
+    return (
+      <Card
+        className='position-absolute top-50 start-50 translate-middle'
+        style={{ zIndex: 1200, width: 300 }}
+      >
+        <Card.Body>
+          <Alert variant='danger'>{isError}</Alert>
+        </Card.Body>
+      </Card>
+    )
+  }
 
   return (
     <div
@@ -94,7 +164,6 @@ const SearchBox: React.FC<ISearchBoxProps> = ({ setCurrentPosition }) => {
           <Col>
             <Form.Group
               className='d-flex align-items-center justify-content-start flex-nowrap'
-              controlId='formPlaceName'
               id='FormGroup'
             >
               <InputGroup>
@@ -103,6 +172,7 @@ const SearchBox: React.FC<ISearchBoxProps> = ({ setCurrentPosition }) => {
                 </InputGroup.Text>
                 <Form.Control
                   id='searchField'
+                  className='d-none'
                   aria-describedby='placeName'
                   type='text'
                   value={search}
@@ -113,7 +183,7 @@ const SearchBox: React.FC<ISearchBoxProps> = ({ setCurrentPosition }) => {
               </InputGroup>
               <MdCancel
                 id='cancelSearch'
-                className='ms-2'
+                className='ms-2 d-none text-danger'
                 onClick={() => handleCancelSearch()}
               />
             </Form.Group>
@@ -123,16 +193,25 @@ const SearchBox: React.FC<ISearchBoxProps> = ({ setCurrentPosition }) => {
       <Row>
         <Col>
           <div style={{ maxHeight: '350px', overflowY: 'auto' }}>
+            {isLoading && (
+              <Card>
+                <Card.Body className='d-flex justify-content-center'>
+                  <Spinner animation='border' />
+                </Card.Body>
+              </Card>
+            )}
+
             <ListGroup className='mt-1 shadow'>
               {debouncedQuery.trim().length >= 2 &&
-                filteredCities.map((city: ILocation) => (
+                fetchedCitiesNames.map((city: ILocation, i: number) => (
                   <ListGroup.Item
-                    key={city.id}
+                    key={`${i}-${city.name}-${city.state}-${city.country}`}
                     className='py-1 px-2'
                     action
                     onClick={() => hadleClickListItem(city)}
                   >
-                    {city.name}, {city.country}
+                    {city.local_names?.it ? city.local_names.it : city.name},{' '}
+                    {city.state}, {city.country}
                   </ListGroup.Item>
                 ))}
             </ListGroup>

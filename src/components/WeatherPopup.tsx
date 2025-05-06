@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Card, Button, Spinner, Alert, Row, Col } from 'react-bootstrap'
 import axios from 'axios'
-import { apiKey } from '../config'
+import { API_KEY } from '../config'
+import { ALERT_TIMEOUT } from '../config'
 import {
   FaMapMarkerAlt,
   FaThermometerHalf,
@@ -54,13 +55,14 @@ const WeatherPopup: React.FC<IWeatherPopupProps> = ({
             params: {
               lat: coord.lat,
               lon: coord.lon,
-              appid: apiKey,
+              appid: API_KEY,
               units: 'metric', // Per ottenere i dati in gradi Celsius
               lang: 'it', // Per ottenere la descrizione meteo in italiano
             },
           }
         )
         setWeatherData(response.data)
+        //console.log('WeatherPopup - fetchWeather', response.data)
       } catch (error: any) {
         setIsError(error.response?.data?.message || 'Errore nella fetch')
       } finally {
@@ -85,6 +87,10 @@ const WeatherPopup: React.FC<IWeatherPopupProps> = ({
   }
 
   if (isError) {
+    setTimeout(() => {
+      setIsError(null)
+    }, ALERT_TIMEOUT)
+
     return (
       <Card
         className='position-absolute top-50 start-50 translate-middle'

@@ -115,9 +115,10 @@ export enum IMainEnum {
 }
 
 export interface ILocation {
-  id: number
   name: string
-  state: string
+  local_names?: { [key: string]: string }
+  lat: number
+  lon: number
   country: string
-  coord: ICoord
+  state: string
 }

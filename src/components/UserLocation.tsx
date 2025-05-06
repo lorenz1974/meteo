@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react'
 import { Alert } from 'react-bootstrap'
+import { ALERT_TIMEOUT } from '../config'
 
 interface IUserLocationProps {
   onLocationFound: (location: { lat: number; lng: number }) => void
 }
 
 const UserLocation: React.FC<IUserLocationProps> = ({ onLocationFound }) => {
-  const [error, setError] = useState<string | null>(null)
+  const [isError, setIsError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      setError('La geolocalizzazione non è supportata dal tuo browser.')
+      setIsError('La geolocalizzazione non è supportata dal tuo browser.')
       return
     }
 
@@ -21,21 +22,27 @@ const UserLocation: React.FC<IUserLocationProps> = ({ onLocationFound }) => {
     }
 
     const handleError = (err: GeolocationPositionError) => {
-      setError('Non è stato possibile ottenere la tua posizione.')
+      setIsError('Non è stato possibile ottenere la tua posizione.')
       console.error(err)
     }
 
     navigator.geolocation.getCurrentPosition(handleSuccess, handleError)
   }, [onLocationFound])
 
+  if (isError) {
+    setTimeout(() => {
+      setIsError(null)
+    }, ALERT_TIMEOUT)
+  }
+
   return (
     <>
-      {error && (
+      {isError && (
         <Alert
           variant='danger'
           style={{ position: 'absolute', top: 10, right: 10, zIndex: 1000 }}
         >
-          {error}
+          {isError}
         </Alert>
       )}
     </>

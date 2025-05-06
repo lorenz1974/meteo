@@ -8,11 +8,13 @@ import {
   InputGroup,
   Row,
   Col,
+  Card,
 } from 'react-bootstrap'
 import { IForecast, IList } from '../interfaces/interfaces'
 import axios from 'axios'
 import Slider from 'react-slick'
-import { apiKey } from '../config'
+import { API_KEY } from '../config'
+import { ALERT_TIMEOUT } from '../config'
 
 import {
   FaThermometerHalf,
@@ -81,13 +83,14 @@ const ForecastPopup: React.FC<IForecastPopupProps> = ({
             params: {
               lat,
               lon,
-              appid: apiKey,
+              appid: API_KEY,
               units: 'metric',
               lang: 'it',
             },
           }
         )
         setForecastData(response.data)
+        //console.log('ForecastPopup - fetchData', response.data)
       } catch (error) {
         setIsError(error as Error)
       } finally {
@@ -105,6 +108,23 @@ const ForecastPopup: React.FC<IForecastPopupProps> = ({
     slidesToShow: 1,
     slidesToScroll: 1,
     beforeChange: (_: number, next: number) => setSlideIndex(next),
+  }
+
+  if (isError) {
+    setTimeout(() => {
+      setIsError(null)
+    }, ALERT_TIMEOUT)
+
+    return (
+      <Card
+        className='position-absolute top-50 start-50 translate-middle'
+        style={{ zIndex: 1200, width: 300 }}
+      >
+        <Card.Body>
+          <Alert variant='danger'>{isError.message}</Alert>
+        </Card.Body>
+      </Card>
+    )
   }
 
   return (
@@ -132,7 +152,7 @@ const ForecastPopup: React.FC<IForecastPopupProps> = ({
             </Spinner>
           </div>
         )}
-        {isError && <Alert variant='danger'>Error: {isError.message}</Alert>}
+
         {!isLoading && !isError && forecastData && (
           <>
             <Slider ref={sliderRef} {...sliderSettings} className='m-3'>
